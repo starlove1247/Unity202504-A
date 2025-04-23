@@ -13,16 +13,33 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     private PlayerInput playerInput;
 
-    private InputAction moveAction;
+    private InputAction moveAction; // 移動行為
+    private InputAction jumpAction; // 互動行為
 
     private void Start()
     {
         moveAction = playerInput.actions.FindAction("Move");
+        jumpAction = playerInput.actions.FindAction("Jump");
+        // 互動事件 串接我們自己的方法
+        jumpAction.performed += JumpActionOnperformed;
     }
 
-    // Update is called once per frame
+    private void JumpActionOnperformed(InputAction.CallbackContext obj)
+    {
+        if (dead) return;
+        Debug.Log($"jump");
+    }
+
+    private bool dead;
+
     void Update()
     {
+        if (dead) return;
+        if (jumpAction.WasPressedThisFrame())
+        {
+            Debug.Log($"jump pressed");
+        }
+
         var moveVector2 = moveAction.ReadValue<Vector2>();
         // 水平的輸入 左右   -1 ~ 1
         // var horizontal = Input.GetAxisRaw("Horizontal");
