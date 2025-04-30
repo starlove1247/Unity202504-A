@@ -4,25 +4,21 @@ using UnityEngine.InputSystem;
 
 public class CharacterController : MonoBehaviour
 {
-    /// <summary>
-    /// 移動速度
-    /// </summary>
     [SerializeField]
-    private float moveSpeed = 3f;
+    private CharacterData characterData;
 
     [SerializeField]
     private PlayerInput playerInput;
 
     private InputAction moveAction;     // 移動行為
     private InputAction interactAction; // 互動行為
-    private bool dead;
+    private bool        dead;
 
     private void Start()
     {
         moveAction     = playerInput.actions.FindAction("Move");
         interactAction = playerInput.actions.FindAction("Interact");
     }
-
 
     void Update()
     {
@@ -36,7 +32,7 @@ public class CharacterController : MonoBehaviour
         // 移動方向
         var direction = new Vector3(moveVector2.x , moveVector2.y , 0); // 1,1,0
         // 移動向量 deltaTime = 1/fps , 1/60 = 0.16667f
-        var movement = direction * moveSpeed * Time.deltaTime;
-        transform.position += movement;
+        var movement = direction * characterData.moveSpeed * Time.deltaTime;
+        transform.position      += movement;
     }
 }
