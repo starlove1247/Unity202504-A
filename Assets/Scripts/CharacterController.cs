@@ -13,31 +13,23 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     private PlayerInput playerInput;
 
-    private InputAction moveAction; // 移動行為
-    private InputAction jumpAction; // 互動行為
+    private InputAction moveAction;     // 移動行為
+    private InputAction interactAction; // 互動行為
+    private bool dead;
 
     private void Start()
     {
-        moveAction = playerInput.actions.FindAction("Move");
-        jumpAction = playerInput.actions.FindAction("Jump");
-        // 互動事件 串接我們自己的方法
-        jumpAction.performed += JumpActionOnperformed;
+        moveAction     = playerInput.actions.FindAction("Move");
+        interactAction = playerInput.actions.FindAction("Interact");
     }
 
-    private void JumpActionOnperformed(InputAction.CallbackContext obj)
-    {
-        if (dead) return;
-        Debug.Log($"jump");
-    }
-
-    private bool dead;
 
     void Update()
     {
         if (dead) return;
-        if (jumpAction.WasPressedThisFrame())
+        if (interactAction.WasPressedThisFrame()) // 互動按鈕按下的判斷式
         {
-            Debug.Log($"jump pressed");
+            Debug.Log($"interact button pressed");
         }
 
         var moveVector2 = moveAction.ReadValue<Vector2>();
