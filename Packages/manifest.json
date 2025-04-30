@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.rstartools.bookmarkeverything": "https://github.com/L1247/bookmark-everything.git?path=BookmarkEverything/Assets/BookmarkEverything",
     "com.unity.feature.2d": "2.0.1",
     "com.unity.ide.rider": "3.0.31",
     "com.unity.inputsystem": "1.11.2",
