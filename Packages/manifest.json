@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.dbrizov.naughtyattributes": "https://github.com/dbrizov/NaughtyAttributes.git#upm",
     "com.luca3317.tmpeffects": "https://github.com/Luca3317/TMPEffects.git?path=/Package",
     "com.rstartools.bookmarkeverything": "https://github.com/L1247/bookmark-everything.git?path=BookmarkEverything/Assets/BookmarkEverything",
     "com.unity.feature.2d": "2.0.1",

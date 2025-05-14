@@ -15,7 +15,7 @@ MonoBehaviour:
   wave:
     upPeriod: 2
     downPeriod: 2
-    amplitude: 1
+    amplitude: 2
     upwardCurve:
       serializedVersion: 2
       m_Curve:
@@ -64,8 +64,8 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    crestWait: 2
-    troughWait: 0
+    crestWait: 1
+    troughWait: 1
     velocity: 1
   waveOffset:
     offsetProvider:
@@ -83,3 +83,4 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 1, a: 0}
   - {r: 0.29411766, g: 0, b: 0.50980395, a: 0}
   - {r: 0.93333334, g: 0.50980395, b: 0.93333334, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
