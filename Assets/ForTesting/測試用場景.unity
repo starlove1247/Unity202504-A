@@ -701,7 +701,7 @@ MonoBehaviour:
   database: {fileID: 11400000, guid: 290ad04254a96934aa269d5b8d258008, type: 2}
   maySkip: 1
   writeOnStart: 0
-  writeOnNewText: 1
+  writeOnNewText: 0
   useScaledTime: 1
   delays:
     delay: 0.2

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: NPC_DialogData
   m_EditorClassIdentifier: 
   dialogTexts:
-  - 12132131
-  - 5324324
+  - "<wave>\u7B2C\u4E00\u6BB5</>. <palette><shake>\u6587\u5B57</></>."
+  - "<wave>\u7B2C\u4E8C\u6BB5</>. <palette><shake>\u6587\u5B57</></>."

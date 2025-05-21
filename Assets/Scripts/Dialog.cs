@@ -7,9 +7,6 @@ public class Dialog : MonoBehaviour
 {
     [SerializeField]
     private TMPWriter tmpWriter;
-
-    [SerializeField]
-    private TMP_Text tmpText;
     
    [Button("執行打字機效果")]
     public void PlayWriter()
@@ -25,6 +22,6 @@ public class Dialog : MonoBehaviour
 
     public void SetText(string dialogText)
     {
-        tmpText.SetText(dialogText);
+        tmpWriter.SetText(dialogText);
     }
 }
