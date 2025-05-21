@@ -25,7 +25,7 @@ public class CharacterController : MonoBehaviour
         if (dead) return;
         if (interactAction.WasPressedThisFrame()) // 互動按鈕按下的判斷式
         {
-            Debug.Log($"interact button pressed");
+            // Debug.Log($"interact button pressed");
         }
 
         var moveVector2 = moveAction.ReadValue<Vector2>();
