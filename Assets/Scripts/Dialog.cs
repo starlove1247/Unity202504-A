@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using TMPEffects.Components;
@@ -48,7 +49,7 @@ public class Dialog : MonoBehaviour
 
     private void InteractActionOnperformed(InputAction.CallbackContext obj)
     {
-        Debug.Log($"互動鍵按下");
+        Debug.Log($"對話系統 互動鍵按下");
         // 如果對話完畢(最後一段話)，而且打字機效果結束，則關閉對話框
         if (dialogIndex + 1 == dialogTexts.Count && tmpWriter.IsWriting == false)
         {
