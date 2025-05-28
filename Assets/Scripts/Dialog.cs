@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using TMPEffects.Components;
-using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class Dialog : MonoBehaviour
 {
@@ -14,10 +13,31 @@ public class Dialog : MonoBehaviour
     [SerializeField]
     private PlayerInput playerInput;
 
+    /// <summary>
+    /// 下一句的提示圖片
+    /// </summary>
+    [SerializeField]
+    private Image nextDialogHint;
+
     private void Start()
     {
+        nextDialogHint.gameObject.SetActive(false);
+        tmpWriter.OnFinishWriter.AddListener(OnFinishWriter);
+        tmpWriter.OnStartWriter.AddListener(OnStartWriter);
         var interactAction = playerInput.actions.FindAction("Interact");
         interactAction.performed += InteractActionOnperformed;
+    }
+
+    private void OnStartWriter(TMPWriter arg0)
+    {
+        // 如果打字機效果開始，隱藏提示圖片
+        nextDialogHint.gameObject.SetActive(false);
+    }
+
+    private void OnFinishWriter(TMPWriter arg0)
+    {
+        // 如果播放完，顯示下一句提示圖片
+        nextDialogHint.gameObject.SetActive(true);
     }
 
     private void OnDisable()
