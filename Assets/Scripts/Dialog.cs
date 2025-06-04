@@ -58,6 +58,8 @@ public class Dialog : MonoBehaviour
         if (dialogIndex + 1 == dialogTexts.Count && tmpWriter.IsWriting == false)
         {
             isInDialog = false;
+            // 對話結束，讓角色可以移動
+            characterController.SetCanMoving(true);
             CloseDialog();
             return;
         }
@@ -114,8 +116,14 @@ public class Dialog : MonoBehaviour
         dialogIndex = 0; // 重置Index
         SetText(dialogTexts[dialogIndex]);
         PlayWriter();
+        // 對話開始，設定角色不能移[按鍵移動]
+        characterController.SetCanMoving(false);
     }
 
+    [SerializeField]
+    private CharacterController characterController;
+
+    
     [Button("執行打字機效果")]
     public void PlayWriter()
     {
