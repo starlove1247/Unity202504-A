@@ -21,8 +21,6 @@ public class NPC : MonoBehaviour
     [SerializeField]
     private PlayerInput playerInput;
 
-   
-
     private void Start()
     {
         // 預設關閉對話視窗
@@ -44,6 +42,9 @@ public class NPC : MonoBehaviour
     private void OnInteractActionPerformed(InputAction.CallbackContext obj)
     {
         Debug.Log($"NPC 互動鍵按下");
+        // 如果已經在對話中，就不再開始對話
+        if (dialog.IsInDialog()) return;
+        // 角色在範圍內，開始對話
         if (characterInTrigger)
         {
             StartDialog();
@@ -80,6 +81,7 @@ public class NPC : MonoBehaviour
     /// 紀錄角色在偵測範圍內
     /// </summary>
     private bool characterInTrigger;
+
     private void OnTriggerEnter2D(Collider2D col)
     {
         // 如果是角色才執行以下行為
