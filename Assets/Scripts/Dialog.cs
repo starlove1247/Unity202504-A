@@ -20,6 +20,13 @@ public class Dialog : MonoBehaviour
     [SerializeField]
     private Image nextDialogHint;
 
+    public static Dialog Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private void Start()
     {
         nextDialogHint.gameObject.SetActive(false);
@@ -152,5 +159,10 @@ public class Dialog : MonoBehaviour
     public bool IsInDialog()
     {
         return isInDialog;
+    }
+
+    public void SetPosition(Vector3 position)
+    {
+        transform.position = position + new Vector3(0 , 2 , 0);
     }
 }

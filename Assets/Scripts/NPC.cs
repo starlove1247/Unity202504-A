@@ -9,9 +9,6 @@ public class NPC : MonoBehaviour
     [SerializeField]
     private NPC_DialogData dialogData;
 
-    [SerializeField]
-    private Dialog dialog;
-
     /// <summary>
     /// NPC UI物件
     /// </summary>
@@ -24,7 +21,7 @@ public class NPC : MonoBehaviour
     private void Start()
     {
         // 預設關閉對話視窗
-        dialog.gameObject.SetActive(false);
+        Dialog.Instance.gameObject.SetActive(false);
         npcUI_Panel.alpha                                    =  0; // 預設設定UI透明度為0
         playerInput.actions.FindAction("Interact").performed += OnInteractActionPerformed;
     }
@@ -43,7 +40,7 @@ public class NPC : MonoBehaviour
     {
         Debug.Log($"NPC 互動鍵按下");
         // 如果已經在對話中，就不再開始對話
-        if (dialog.IsInDialog()) return;
+        if (Dialog.Instance.IsInDialog()) return;
         // 角色在範圍內，開始對話
         if (characterInTrigger)
         {
@@ -54,9 +51,10 @@ public class NPC : MonoBehaviour
     [Button("開始對話")]
     public void StartDialog()
     {
-        dialog.gameObject.SetActive(true);
-        dialog.SetTexts(dialogData.dialogTexts);
-        dialog.StartDialog();
+        Dialog.Instance.SetPosition(transform.position);
+        Dialog.Instance.gameObject.SetActive(true);
+        Dialog.Instance.SetTexts(dialogData.dialogTexts);
+        Dialog.Instance.StartDialog();
     }
 
     [Button("顯示NPC對話提示UI")]
@@ -74,7 +72,7 @@ public class NPC : MonoBehaviour
     [Button("播放下一段對話")]
     public void PlayNextDialog()
     {
-        dialog.PlayNextDialog();
+        Dialog.Instance.PlayNextDialog();
     }
 
     /// <summary>

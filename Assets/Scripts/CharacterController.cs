@@ -1,4 +1,5 @@
 using System;
+using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,7 +13,7 @@ public class CharacterController : MonoBehaviour
 
     private InputAction moveAction;     // 移動行為
     private InputAction interactAction; // 互動行為
-    private bool        dead;
+    private  bool        dead;
 
     private void Start()
     {
