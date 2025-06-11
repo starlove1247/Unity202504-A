@@ -13,7 +13,14 @@ public class CharacterController : MonoBehaviour
 
     private InputAction moveAction;     // 移動行為
     private InputAction interactAction; // 互動行為
-    private  bool        dead;
+    private bool        dead;
+
+    public static CharacterController Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -39,13 +46,14 @@ public class CharacterController : MonoBehaviour
         var direction = new Vector3(moveVector2.x , moveVector2.y , 0); // 1,1,0
         // 移動向量 deltaTime = 1/fps , 1/60 = 0.16667f
         var movement = direction * characterData.moveSpeed * Time.deltaTime;
-        transform.position      += movement;
+        transform.position += movement;
     }
 
     /// <summary>
     /// 可不可用按鍵去讓角色移動的狀態
     /// </summary>
-    private bool canMove ;
+    private bool canMove;
+
     public void SetCanMoving(bool canMove)
     {
         this.canMove = canMove;

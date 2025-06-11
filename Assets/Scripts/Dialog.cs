@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using DefaultNamespace;
 using NaughtyAttributes;
+using Scripts.Custom;
 using TMPEffects.Components;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,6 +10,29 @@ using UnityEngine.UI;
 
 public class Dialog : MonoBehaviour
 {
+#region Public Variables
+
+    public static Dialog Instance;
+
+#endregion
+
+#region Private Variables
+
+    /// <summary>
+    /// 所有的對話
+    /// </summary>
+    private List<string> dialogTexts;
+
+    /// <summary>
+    /// 紀錄目前播放到第幾段話(index) 從0開始
+    /// </summary>
+    private int dialogIndex = 0;
+
+    /// <summary>
+    /// 是否在對話中的狀態
+    /// </summary>
+    private bool isInDialog;
+
     [SerializeField]
     private TMPWriter tmpWriter;
 
@@ -20,7 +45,12 @@ public class Dialog : MonoBehaviour
     [SerializeField]
     private Image nextDialogHint;
 
-    public static Dialog Instance;
+    // [SerializeField]
+    // private CharacterController characterController;
+
+#endregion
+
+#region Unity events
 
     private void Awake()
     {
@@ -34,47 +64,17 @@ public class Dialog : MonoBehaviour
         tmpWriter.OnStartWriter.AddListener(OnStartWriter);
     }
 
-    private void OnEnable()
-    {
-        var interactAction = playerInput.actions.FindAction("Interact");
-        interactAction.performed += InteractActionOnperformed;
-    }
+#endregion
 
-    private void OnStartWriter(TMPWriter arg0)
-    {
-        // 如果打字機效果開始，隱藏提示圖片
-        nextDialogHint.gameObject.SetActive(false);
-    }
+#region Public Methods
 
-    private void OnFinishWriter(TMPWriter arg0)
+    /// <summary>
+    /// 回傳 - 是否在對話中的狀態
+    /// </summary>
+    /// <returns></returns>
+    public bool IsInDialog()
     {
-        // 如果播放完，顯示下一句提示圖片
-        nextDialogHint.gameObject.SetActive(true);
-    }
-
-    private void OnDisable()
-    {
-        var interactAction = playerInput.actions.FindAction("Interact");
-        interactAction.performed -= InteractActionOnperformed;
-    }
-
-    private void InteractActionOnperformed(InputAction.CallbackContext obj)
-    {
-        Debug.Log($"對話系統 互動鍵按下");
-        // 如果對話完畢(最後一段話)，而且打字機效果結束，則關閉對話框
-        if (dialogIndex + 1 == dialogTexts.Count && tmpWriter.IsWriting == false)
-        {
-            isInDialog = false;
-            // 對話結束，讓角色可以移動
-            characterController.SetCanMoving(true);
-            CloseDialog();
-            return;
-        }
-
-        // 如果還在播放打字機效果，則Skip打字機效果
-        if (tmpWriter.IsWriting) SkipWriter();
-        // 如果打字機效果結束，則播放下一段文字
-        else if (tmpWriter.IsWriting == false) PlayNextDialog();
+        return isInDialog;
     }
 
     [Button("播放下一段對話")]
@@ -94,25 +94,31 @@ public class Dialog : MonoBehaviour
         PlayWriter();
     }
 
-    [Button("關閉對話框")]
-    private void CloseDialog()
+    [Button("執行打字機效果")]
+    public void PlayWriter()
     {
-        gameObject.SetActive(false);
+        tmpWriter.RestartWriter();
     }
 
-    /// <summary>
-    /// 所有的對話
-    /// </summary>
-    private List<string> dialogTexts;
+    public void SetPosition(Vector3 position)
+    {
+        transform.position = position + new Vector3(0 , 2 , 0);
+    }
 
-    /// <summary>
-    /// 紀錄目前播放到第幾段話(index) 從0開始
-    /// </summary>
-    private int dialogIndex = 0;
+    public void SetText(string dialogText)
+    {
+        tmpWriter.SetText(dialogText);
+    }
 
     public void SetTexts(List<string> texts)
     {
         dialogTexts = texts;
+    }
+
+    [Button("跳過打字機效果，直接播放整行")]
+    public void SkipWriter()
+    {
+        tmpWriter.SkipWriter();
     }
 
     public void StartDialog()
@@ -124,45 +130,63 @@ public class Dialog : MonoBehaviour
         SetText(dialogTexts[dialogIndex]);
         PlayWriter();
         // 對話開始，設定角色不能移[按鍵移動]
-        characterController.SetCanMoving(false);
+        // characterController.SetCanMoving(false);
+        EventBus.Raise<DialogStartEvent>(_ => _.OnDialogStarted());
     }
 
-    [SerializeField]
-    private CharacterController characterController;
+#endregion
 
-    
-    [Button("執行打字機效果")]
-    public void PlayWriter()
+#region Private Methods
+
+    [Button("關閉對話框")]
+    private void CloseDialog()
     {
-        tmpWriter.RestartWriter();
+        gameObject.SetActive(false);
     }
 
-    [Button("跳過打字機效果，直接播放整行")]
-    public void SkipWriter()
+    private void InteractActionOnperformed(InputAction.CallbackContext obj)
     {
-        tmpWriter.SkipWriter();
+        Debug.Log($"對話系統 互動鍵按下");
+        // 如果對話完畢(最後一段話)，而且打字機效果結束，則關閉對話框
+        if (dialogIndex + 1 == dialogTexts.Count && tmpWriter.IsWriting == false)
+        {
+            isInDialog = false;
+            // 對話結束，讓角色可以移動
+            // characterController.SetCanMoving(true);
+            EventBus.Raise<DialogEndEvent>(_ => _.OnDialogEnded());
+            CloseDialog();
+            return;
+        }
+
+        // 如果還在播放打字機效果，則Skip打字機效果
+        if (tmpWriter.IsWriting) SkipWriter();
+        // 如果打字機效果結束，則播放下一段文字
+        else if (tmpWriter.IsWriting == false) PlayNextDialog();
     }
 
-    public void SetText(string dialogText)
+    private void OnDisable()
     {
-        tmpWriter.SetText(dialogText);
+        var interactAction = playerInput.actions.FindAction("Interact");
+        interactAction.performed -= InteractActionOnperformed;
     }
 
-    /// <summary>
-    /// 是否在對話中的狀態
-    /// </summary>
-    private bool isInDialog;
-    /// <summary>
-    /// 回傳 - 是否在對話中的狀態
-    /// </summary>
-    /// <returns></returns>
-    public bool IsInDialog()
+    private void OnEnable()
     {
-        return isInDialog;
+        var interactAction = playerInput.actions.FindAction("Interact");
+        interactAction.performed += InteractActionOnperformed;
     }
 
-    public void SetPosition(Vector3 position)
+    private void OnFinishWriter(TMPWriter arg0)
     {
-        transform.position = position + new Vector3(0 , 2 , 0);
+        // 如果播放完，顯示下一句提示圖片
+        nextDialogHint.gameObject.SetActive(true);
     }
+
+    private void OnStartWriter(TMPWriter arg0)
+    {
+        // 如果打字機效果開始，隱藏提示圖片
+        nextDialogHint.gameObject.SetActive(false);
+    }
+
+#endregion
 }

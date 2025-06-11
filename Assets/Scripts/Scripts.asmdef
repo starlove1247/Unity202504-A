@@ -6,7 +6,8 @@
         "TMPEffects",
         "NaughtyAttributes.Core",
         "Unity.TextMeshPro",
-        "DOTween.Modules"
+        "DOTween.Modules",
+        "CustomLibrary"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
